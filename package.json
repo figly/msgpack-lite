@@ -23,6 +23,7 @@
     "isarray": "^1.0.0"
   },
   "devDependencies": {
+    "es6-map": "^0.1.4",
     "async": "^1.5.2",
     "browserify": "^13.0.1",
     "concat-stream": "^1.5.1",

@@ -1,6 +1,7 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
+var Map = global.Map = require("es6-map");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
@@ -154,33 +155,35 @@ describe(TITLE, function() {
 
   it("map (small)", function() {
     pattern(0, 257).forEach(function(length) {
-      var value = {};
+      var value = new Map();
+      assert.equal(true, value instanceof Map);
       for (var i = 0; i < length; i++) {
         var key = String.fromCharCode(i);
-        value[key] = length;
+        value.set(key, length);
       }
-      assert.equal(Object.keys(value).length, length);
+      assert.equal(value.size, length);
       var encoded = msgpack.encode(value);
-      var decoded = msgpack.decode(encoded);
-      assert.equal(Object.keys(decoded).length, length);
-      assert.equal(decoded[0], value[0]);
-      assert.equal(decoded[length - 1], value[length - 1]);
+      var decoded = msgpack.decode(encoded, {"usemap": true});
+      assert.equal(true, decoded instanceof Map);
+      assert.equal(decoded.size, length);
+      assert.equal(decoded.get(String.fromCharCode(0)), value.get(String.fromCharCode(0)));
+      assert.equal(decoded.get(String.fromCharCode(length - 1)), value.get(String.fromCharCode(length - 1)));
     });
   });
 
   it("map (large)", function() {
     this.timeout(30000);
     pattern(65536, 65537).forEach(function(length) {
-      var value = {};
+      var value = new Map();
       for (var i = 0; i < length; i++) {
-        value[i] = length;
+        value.set(i, length);
       }
-      assert.equal(Object.keys(value).length, length);
+      assert.equal(value.size, length);
       var encoded = msgpack.encode(value);
-      var decoded = msgpack.decode(encoded);
-      assert.equal(Object.keys(decoded).length, length);
-      assert.equal(decoded[0], value[0]);
-      assert.equal(decoded[length - 1], value[length - 1]);
+      var decoded = msgpack.decode(encoded, {"usemap": true});
+      assert.equal(decoded.size, length);
+      assert.equal(decoded.get(0), value.get(0));
+      assert.equal(decoded.get(length - 1), value.get(length - 1));
     });
   });
 
