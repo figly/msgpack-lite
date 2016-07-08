@@ -3,7 +3,6 @@
 var assert = require("assert");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
-var Map = isBrowser && window.Map || global.Map;
 var HAS_MAP = ("undefined" !== typeof Map);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");

@@ -37,6 +37,7 @@
     "es3": true,
     "globals": {
       "JSON": true,
+      "Map": true,
       "Symbol": true,
       "window": true
     },
